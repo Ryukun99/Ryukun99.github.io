@@ -1,488 +1,785 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>りゅーくん | Game Developer</title>
-<meta name="description" content="Unityで2Dアクション・レースゲームを作っています。りゅーくん（龍汰）のポートフォリオ。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>りゅーくん | Game Developer</title>
+    <meta name="description" content="Unityで2Dアクション・レースゲームを作っています。りゅーくん（鈴木龍汰）のポートフォリオ。">
 
-<!-- OGP：SNSやDMでURLを貼ったときの見た目。ogp.png を用意したら有効になります -->
-<meta property="og:title" content="りゅーくん | Game Developer">
-<meta property="og:description" content="Unityで2Dアクション・レースゲームを作っています。">
-<meta property="og:type" content="website">
-<meta property="og:image" content="assets/img/ogp.png">
+    <!-- OGP：SNSにURLを貼ったときの見た目。
+         assets/img/ogp.png（1200×630）を置いたら、下の4行のコメントを外してください -->
+    <!--
+    <meta property="og:title" content="りゅーくん | Game Developer">
+    <meta property="og:description" content="Unityで2Dアクション・レースゲームを作っています。">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/img/ogp.png">
+    -->
+    <!-- ファビコン：assets/img/icon.png を置いたら下の1行のコメントを外す -->
+    <!-- <link rel="icon" href="assets/img/icon.png"> -->
 
-<link rel="icon" href="assets/img/icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
 
-<style>
-/* ============================================================
-   ◆ 色はここだけ変えれば全部変わります
-   イラストが上がったら、その絵の中で一番効いてる色を --main に。
-   --accent は --main の反対側の色（補色寄り）にすると締まります。
-   ============================================================ */
-:root{
-  --main:      #FF7A3D;   /* メインカラー（仮：オレンジ） */
-  --main-dark: #E85A18;   /* メインの濃い版：文字やホバー用 */
-  --accent:    #2BB3C0;   /* アクセント（仮：ターコイズ） */
-  --ink:       #2B2724;   /* 基本の文字色。真っ黒より少し茶色いと柔らかい */
-  --ink-sub:   #7A716B;   /* 補足文字 */
-  --bg:        #FFFDF9;   /* 背景：真っ白より生成りが上品 */
-  --card:      #FFFFFF;
-  --line:      #EDE6DE;
+    <style>
+        /* ============================================================
+           ◆ 色はここだけ変えれば全部変わります
+           イラストが上がったら、その絵の中で一番効いてる色を --main に。
+           ============================================================ */
+        :root {
+            --main: #FF7A3D; /* メインカラー（仮：オレンジ） */
+            --main-dark: #E85A18; /* メインの濃い版：文字やホバー用 */
+            --accent: #2BB3C0; /* アクセント（仮：ターコイズ） */
+            --ink: #2B2724;
+            --ink-sub: #7A716B;
+            --bg: #FFFDF9;
+            --card: #FFFFFF;
+            --line: #EDE6DE;
+            --radius: 20px;
+            --shadow: 0 2px 4px rgba(43,39,36,.04), 0 12px 28px rgba(43,39,36,.07);
+            --shadow-hi: 0 4px 8px rgba(43,39,36,.06), 0 20px 44px rgba(43,39,36,.12);
+            --font-ja: "Zen Maru Gothic", system-ui, sans-serif;
+            --font-en: "Outfit", system-ui, sans-serif;
+        }
 
-  --radius:    20px;
-  --shadow:    0 2px 4px rgba(43,39,36,.04), 0 12px 28px rgba(43,39,36,.07);
-  --shadow-hi: 0 4px 8px rgba(43,39,36,.06), 0 20px 44px rgba(43,39,36,.12);
+        * {
+            box-sizing: border-box
+        }
 
-  --font-ja: "Zen Maru Gothic", system-ui, sans-serif;
-  --font-en: "Outfit", system-ui, sans-serif;
-}
+        html {
+            scroll-behavior: smooth
+        }
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0; background:var(--bg); color:var(--ink);
-  font-family:var(--font-ja); font-weight:500;
-  line-height:1.85; letter-spacing:.02em;
-  -webkit-font-smoothing:antialiased;
-}
-img{max-width:100%; display:block}
-a{color:inherit}
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font-ja);
+            font-weight: 500;
+            line-height: 1.85;
+            letter-spacing: .02em;
+            -webkit-font-smoothing: antialiased;
+        }
 
-.wrap{width:min(100% - 40px, 980px); margin-inline:auto}
-section{padding:88px 0}
-@media (max-width:640px){ section{padding:60px 0} }
+        img {
+            max-width: 100%;
+            display: block
+        }
 
-/* ---------- 見出し ---------- */
-.sec-head{margin-bottom:40px}
-.sec-head .en{
-  font-family:var(--font-en); font-weight:800; font-size:.78rem;
-  letter-spacing:.18em; color:var(--main); display:block; margin-bottom:2px;
-}
-.sec-head h2{
-  font-size:clamp(1.5rem, 4vw, 2rem); font-weight:900; margin:0;
-}
+        a {
+            color: inherit
+        }
 
-/* ---------- ヘッダー ---------- */
-header.nav{
-  position:sticky; top:0; z-index:50;
-  background:rgba(255,253,249,.82); backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line);
-}
-.nav-in{display:flex; align-items:center; gap:16px; height:62px}
-.nav-logo{display:flex; align-items:center; gap:10px; font-weight:900; text-decoration:none}
-.nav-logo img{width:32px; height:32px; border-radius:50%}
-.nav-links{margin-left:auto; display:flex; gap:22px; font-family:var(--font-en); font-weight:700; font-size:.85rem}
-.nav-links a{text-decoration:none; color:var(--ink-sub); transition:color .2s}
-.nav-links a:hover{color:var(--main)}
-@media (max-width:640px){ .nav-links{gap:14px; font-size:.75rem} }
+        .wrap {
+            width: min(100% - 40px, 980px);
+            margin-inline: auto
+        }
 
-/* ---------- ヒーロー ---------- */
-.hero{padding:72px 0 64px; position:relative; overflow:hidden}
-.hero::before{ /* 背景のふわっとした円。ポップさの担保 */
-  content:""; position:absolute; width:520px; height:520px; border-radius:50%;
-  background:var(--main); opacity:.08; top:-200px; right:-140px; pointer-events:none;
-}
-.hero::after{
-  content:""; position:absolute; width:340px; height:340px; border-radius:50%;
-  background:var(--accent); opacity:.08; bottom:-180px; left:-120px; pointer-events:none;
-}
-.hero-in{position:relative; display:flex; align-items:center; gap:44px; flex-wrap:wrap}
-.hero-icon{
-  width:180px; height:180px; border-radius:50%; flex:none;
-  background:var(--card); border:4px solid var(--main);
-  box-shadow:var(--shadow);
-  display:grid; place-items:center; overflow:hidden;
-}
-/* ↓ イラストが届いたら <img src="assets/img/icon.png"> に差し替え */
-.hero-icon .placeholder{
-  font-family:var(--font-en); font-weight:800; font-size:.72rem;
-  color:var(--ink-sub); text-align:center; line-height:1.5; padding:0 12px;
-}
-.hero-text{flex:1; min-width:280px}
-.hero-name{font-size:clamp(2.2rem, 7vw, 3.4rem); font-weight:900; margin:0; line-height:1.2}
-.hero-name .real{font-size:.4em; font-weight:700; color:var(--ink-sub); margin-left:.6em}
-.hero-role{
-  font-family:var(--font-en); font-weight:800; font-size:1rem;
-  color:var(--main-dark); letter-spacing:.08em; margin:6px 0 14px;
-}
-.hero-lead{font-size:1.02rem; margin:0 0 24px; max-width:34em}
-.hero-links{display:flex; gap:10px; flex-wrap:wrap}
-.btn{
-  display:inline-flex; align-items:center; gap:7px;
-  padding:11px 22px; border-radius:999px; text-decoration:none;
-  font-weight:700; font-size:.9rem; transition:transform .18s, box-shadow .18s;
-}
-.btn:hover{transform:translateY(-2px)}
-.btn-fill{background:var(--main); color:#fff; box-shadow:0 6px 16px rgba(255,122,61,.32)}
-.btn-fill:hover{box-shadow:0 10px 24px rgba(255,122,61,.42)}
-.btn-line{border:2px solid var(--line); background:var(--card)}
-.btn-line:hover{border-color:var(--main); color:var(--main-dark)}
+        section {
+            padding: 88px 0
+        }
 
-/* ---------- 作品カード ---------- */
-.works{display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:22px}
-.card{
-  background:var(--card); border-radius:var(--radius); overflow:hidden;
-  box-shadow:var(--shadow); text-decoration:none; display:block;
-  transition:transform .22s, box-shadow .22s;
-}
-.card:hover{transform:translateY(-5px); box-shadow:var(--shadow-hi)}
-.card-thumb{
-  aspect-ratio:16/9; background:linear-gradient(135deg, var(--line), #F7F1EA);
-  display:grid; place-items:center; color:var(--ink-sub);
-  font-family:var(--font-en); font-weight:700; font-size:.8rem;
-}
-.card-body{padding:18px 20px 22px}
-.card-tag{
-  display:inline-block; font-family:var(--font-en); font-weight:800; font-size:.68rem;
-  letter-spacing:.1em; padding:3px 10px; border-radius:999px;
-  background:rgba(255,122,61,.12); color:var(--main-dark); margin-bottom:8px;
-}
-.card h3{margin:0 0 6px; font-size:1.12rem; font-weight:900}
-.card p{margin:0; font-size:.86rem; color:var(--ink-sub); line-height:1.7}
+        @media (max-width:640px) {
+            section {
+                padding: 60px 0
+            }
+        }
 
-/* ---------- 作品詳細 ---------- */
-.work{
-  background:var(--card); border-radius:var(--radius); padding:36px;
-  box-shadow:var(--shadow); margin-bottom:34px;
-}
-@media (max-width:640px){ .work{padding:24px 20px} }
-.work-head{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:6px}
-.work-head h3{margin:0; font-size:1.5rem; font-weight:900}
-.work-head .en{font-family:var(--font-en); font-weight:700; font-size:.8rem; color:var(--ink-sub)}
-.work-lead{color:var(--ink-sub); margin:0 0 24px}
+        /* ---------- 見出し ---------- */
+        .sec-head {
+            margin-bottom: 40px
+        }
 
-/* 動画枠：YouTubeの埋め込みをそのまま入れれば16:9で収まります */
-.video{
-  aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:#1a1614;
-  display:grid; place-items:center; color:#fff9; margin-bottom:26px;
-  font-family:var(--font-en); font-weight:700; font-size:.85rem; text-align:center; padding:20px;
-}
-.video iframe{width:100%; height:100%; border:0; display:block}
+            .sec-head .en {
+                font-family: var(--font-en);
+                font-weight: 800;
+                font-size: .78rem;
+                letter-spacing: .18em;
+                color: var(--main);
+                display: block;
+                margin-bottom: 2px;
+            }
 
-.shots{display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:12px; margin-bottom:28px}
-.shot{
-  aspect-ratio:16/9; border-radius:10px; background:#F4EEE7;
-  display:grid; place-items:center; color:var(--ink-sub); font-size:.72rem;
-  font-family:var(--font-en); font-weight:700;
-}
+            .sec-head h2 {
+                font-size: clamp(1.5rem, 4vw, 2rem);
+                font-weight: 900;
+                margin: 0
+            }
 
-.spec{width:100%; border-collapse:collapse; margin-bottom:26px; font-size:.9rem}
-.spec th, .spec td{padding:11px 4px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top}
-.spec th{width:8.5em; font-weight:700; color:var(--ink-sub); white-space:nowrap}
-@media (max-width:520px){
-  .spec th{width:auto; display:block; border:0; padding-bottom:0}
-  .spec td{display:block; padding-top:2px}
-}
+        /* ---------- ヘッダー ---------- */
+        header.nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255,253,249,.82);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
 
-.points h4{
-  font-size:.95rem; margin:0 0 12px; font-weight:900;
-  display:flex; align-items:center; gap:8px;
-}
-.points h4::before{content:""; width:5px; height:18px; border-radius:3px; background:var(--accent)}
-.points ul{margin:0 0 24px; padding-left:0; list-style:none}
-.points li{
-  position:relative; padding-left:26px; margin-bottom:12px; font-size:.92rem;
-}
-.points li::before{
-  content:""; position:absolute; left:6px; top:.72em;
-  width:7px; height:7px; border-radius:50%; background:var(--main);
-}
-.points li b{color:var(--main-dark)}
+        .nav-in {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            height: 62px
+        }
 
-.work-links{display:flex; gap:10px; flex-wrap:wrap}
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            text-decoration: none
+        }
 
-/* ---------- スキル ---------- */
-.skills{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:20px}
-.skill{background:var(--card); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow)}
-.skill h4{margin:0 0 12px; font-size:1rem; font-weight:900}
-.skill ul{margin:0; padding-left:1.1em; font-size:.88rem; color:var(--ink-sub)}
-.skill li{margin-bottom:5px}
+            .nav-logo img {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%
+            }
 
-/* ---------- 連絡先 ---------- */
-.contact{
-  background:var(--main); color:#fff; border-radius:var(--radius);
-  padding:48px 40px; text-align:center;
-}
-@media (max-width:640px){ .contact{padding:36px 22px} }
-.contact h2{margin:0 0 8px; font-size:1.6rem; font-weight:900}
-.contact p{margin:0 0 24px; opacity:.92; font-size:.93rem}
-.contact .btn-fill{background:#fff; color:var(--main-dark); box-shadow:0 6px 20px rgba(0,0,0,.16)}
+        .nav-links {
+            margin-left: auto;
+            display: flex;
+            gap: 22px;
+            font-family: var(--font-en);
+            font-weight: 700;
+            font-size: .85rem;
+        }
 
-footer{padding:34px 0 46px; text-align:center; color:var(--ink-sub); font-size:.8rem}
-</style>
+            .nav-links a {
+                text-decoration: none;
+                color: var(--ink-sub);
+                transition: color .2s
+            }
+
+                .nav-links a:hover {
+                    color: var(--main)
+                }
+
+        @media (max-width:640px) {
+            .nav-links {
+                gap: 14px;
+                font-size: .75rem
+            }
+        }
+
+        /* ---------- ヒーロー ---------- */
+        .hero {
+            padding: 72px 0 64px;
+            position: relative;
+            overflow: hidden
+        }
+
+            .hero::before {
+                content: "";
+                position: absolute;
+                width: 520px;
+                height: 520px;
+                border-radius: 50%;
+                background: var(--main);
+                opacity: .08;
+                top: -200px;
+                right: -140px;
+                pointer-events: none;
+            }
+
+            .hero::after {
+                content: "";
+                position: absolute;
+                width: 340px;
+                height: 340px;
+                border-radius: 50%;
+                background: var(--accent);
+                opacity: .08;
+                bottom: -180px;
+                left: -120px;
+                pointer-events: none;
+            }
+
+        .hero-in {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 44px;
+            flex-wrap: wrap
+        }
+
+        .hero-icon {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            flex: none;
+            background: var(--card);
+            border: 4px solid var(--main);
+            box-shadow: var(--shadow);
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+        }
+
+            .hero-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover
+            }
+
+            .hero-icon .placeholder {
+                font-family: var(--font-en);
+                font-weight: 800;
+                font-size: .72rem;
+                color: var(--ink-sub);
+                text-align: center;
+                line-height: 1.5;
+                padding: 0 12px;
+            }
+
+        .hero-text {
+            flex: 1;
+            min-width: 280px
+        }
+
+        .hero-name {
+            font-size: clamp(2.2rem, 7vw, 3.4rem);
+            font-weight: 900;
+            margin: 0;
+            line-height: 1.2
+        }
+
+            .hero-name .real {
+                font-size: .4em;
+                font-weight: 700;
+                color: var(--ink-sub);
+                margin-left: .6em
+            }
+
+        .hero-role {
+            font-family: var(--font-en);
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--main-dark);
+            letter-spacing: .08em;
+            margin: 6px 0 14px;
+        }
+
+        .hero-lead {
+            font-size: 1.02rem;
+            margin: 0 0 24px;
+            max-width: 34em
+        }
+
+        .hero-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 11px 22px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: .9rem;
+            transition: transform .18s, box-shadow .18s;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px)
+            }
+
+        .btn-fill {
+            background: var(--main);
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(255,122,61,.32)
+        }
+
+            .btn-fill:hover {
+                box-shadow: 0 10px 24px rgba(255,122,61,.42)
+            }
+
+        .btn-line {
+            border: 2px solid var(--line);
+            background: var(--card)
+        }
+
+            .btn-line:hover {
+                border-color: var(--main);
+                color: var(--main-dark)
+            }
+
+        /* ---------- 作品カード ---------- */
+        .works {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+            gap: 22px
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            display: block;
+            transition: transform .22s, box-shadow .22s;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-hi)
+            }
+
+        .card-thumb {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--line), #F7F1EA);
+            display: grid;
+            place-items: center;
+            color: var(--ink-sub);
+            font-family: var(--font-en);
+            font-weight: 700;
+            font-size: .8rem;
+            overflow: hidden;
+        }
+
+            .card-thumb img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover
+            }
+
+        .card-body {
+            padding: 18px 20px 22px
+        }
+
+        .card-tag {
+            display: inline-block;
+            font-family: var(--font-en);
+            font-weight: 800;
+            font-size: .68rem;
+            letter-spacing: .1em;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(255,122,61,.12);
+            color: var(--main-dark);
+            margin-bottom: 8px;
+        }
+
+        .card h3 {
+            margin: 0 0 6px;
+            font-size: 1.12rem;
+            font-weight: 900
+        }
+
+        .card p {
+            margin: 0;
+            font-size: .86rem;
+            color: var(--ink-sub);
+            line-height: 1.7
+        }
+
+        /* ---------- 作品詳細 ---------- */
+        .work {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            margin-bottom: 34px;
+        }
+
+        @media (max-width:640px) {
+            .work {
+                padding: 24px 20px
+            }
+        }
+
+        .work-head {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 6px
+        }
+
+            .work-head h3 {
+                margin: 0;
+                font-size: 1.5rem;
+                font-weight: 900
+            }
+
+            .work-head .en {
+                font-family: var(--font-en);
+                font-weight: 700;
+                font-size: .8rem;
+                color: var(--ink-sub)
+            }
+
+        .work-lead {
+            color: var(--ink-sub);
+            margin: 0 0 24px
+        }
+
+        /* スクリーンショット */
+        .shot {
+            aspect-ratio: 16/9;
+            border-radius: 10px;
+            background: #F4EEE7;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            color: var(--ink-sub);
+            font-size: .72rem;
+            font-family: var(--font-en);
+            font-weight: 700;
+        }
+
+            .shot img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover
+            }
+        /* 大きく1枚だけ見せる場合 */
+        .shot-main {
+            border-radius: 14px;
+            margin-bottom: 28px
+        }
+        /* 複数枚を並べたくなったとき用（今は未使用） */
+        .shots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+            gap: 12px;
+            margin-bottom: 28px
+        }
+
+        .spec {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 26px;
+            font-size: .9rem
+        }
+
+            .spec th, .spec td {
+                padding: 11px 4px;
+                border-bottom: 1px solid var(--line);
+                text-align: left;
+                vertical-align: top;
+            }
+
+            .spec th {
+                width: 8.5em;
+                font-weight: 700;
+                color: var(--ink-sub);
+                white-space: nowrap
+            }
+
+        @media (max-width:520px) {
+            .spec th {
+                width: auto;
+                display: block;
+                border: 0;
+                padding-bottom: 0
+            }
+
+            .spec td {
+                display: block;
+                padding-top: 2px
+            }
+        }
+
+        .points h4 {
+            font-size: .95rem;
+            margin: 0 0 12px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .points h4::before {
+                content: "";
+                width: 5px;
+                height: 18px;
+                border-radius: 3px;
+                background: var(--accent)
+            }
+
+        .points ul {
+            margin: 0 0 24px;
+            padding-left: 0;
+            list-style: none
+        }
+
+        .points li {
+            position: relative;
+            padding-left: 26px;
+            margin-bottom: 12px;
+            font-size: .92rem
+        }
+
+            .points li::before {
+                content: "";
+                position: absolute;
+                left: 6px;
+                top: .72em;
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--main);
+            }
+
+            .points li b {
+                color: var(--main-dark)
+            }
+
+        /* ---------- スキル ---------- */
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+            gap: 20px
+        }
+
+        .skill {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow)
+        }
+
+            .skill h4 {
+                margin: 0 0 12px;
+                font-size: 1rem;
+                font-weight: 900
+            }
+
+            .skill ul {
+                margin: 0;
+                padding-left: 1.1em;
+                font-size: .88rem;
+                color: var(--ink-sub)
+            }
+
+            .skill li {
+                margin-bottom: 5px
+            }
+
+        /* ---------- 連絡先 ---------- */
+        .contact {
+            background: var(--main);
+            color: #fff;
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            text-align: center;
+        }
+
+        @media (max-width:640px) {
+            .contact {
+                padding: 36px 22px
+            }
+        }
+
+        .contact h2 {
+            margin: 0 0 8px;
+            font-size: 1.6rem;
+            font-weight: 900
+        }
+
+        .contact p {
+            margin: 0 0 24px;
+            opacity: .92;
+            font-size: .93rem
+        }
+
+        .contact .btn-fill {
+            background: #fff;
+            color: var(--main-dark);
+            box-shadow: 0 6px 20px rgba(0,0,0,.16)
+        }
+
+        footer {
+            padding: 34px 0 46px;
+            text-align: center;
+            color: var(--ink-sub);
+            font-size: .8rem
+        }
+    </style>
 </head>
 <body>
 
-<header class="nav">
-  <div class="wrap nav-in">
-    <a class="nav-logo" href="#top">
-      <!-- アイコン完成後：<img src="assets/img/icon.png" alt=""> に差し替え -->
-      <span style="width:32px;height:32px;border-radius:50%;background:var(--main);display:inline-block"></span>
-      りゅーくん
-    </a>
-    <nav class="nav-links">
-      <a href="#works">WORKS</a>
-      <a href="#skills">SKILLS</a>
-      <a href="#about">ABOUT</a>
-      <a href="#contact">CONTACT</a>
-    </nav>
-  </div>
-</header>
-
-<!-- ============ ヒーロー ============ -->
-<div class="hero" id="top">
-  <div class="wrap hero-in">
-    <div class="hero-icon">
-      <!-- ★イラストが届いたらここを差し替え：
-           <img src="assets/img/icon.png" alt="りゅーくんのアイコン"> -->
-      <span class="placeholder">ICON<br>ここに龍</span>
-    </div>
-    <div class="hero-text">
-      <h1 class="hero-name">りゅーくん<span class="real">龍汰</span></h1>
-      <div class="hero-role">GAME DEVELOPER / UNITY</div>
-      <p class="hero-lead">
-        <!-- ★ここを自分の言葉で。「何を作る人か」が一文でわかるように -->
-        Unityで2Dアクションとレースゲームを作っています。
-        遊んだ人が思わず声を出すような、仕掛けのある手触りを大事にしています。
-      </p>
-      <div class="hero-links">
-        <a class="btn btn-fill" href="#works">作品を見る</a>
-        <a class="btn btn-line" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
-        <a class="btn btn-line" href="https://x.com/" target="_blank" rel="noopener">X</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ 作品一覧 ============ -->
-<section id="works">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="en">WORKS</span>
-      <h2>作品</h2>
-    </div>
-
-    <div class="works">
-      <a class="card" href="#work-monochrome">
-        <div class="card-thumb">THUMBNAIL 16:9</div>
-        <div class="card-body">
-          <span class="card-tag">2D PUZZLE ACTION</span>
-          <h3>モノクロ・ボックス</h3>
-          <p>白と黒の世界を切り替えて進む2Dパズルアクション。東京ゲームショウ出展作品。</p>
+    <header class="nav">
+        <div class="wrap nav-in">
+            <a class="nav-logo" href="#top">
+                <!-- アイコン完成後：下の<span>を消して、この行のコメントを外す
+                     <img src="assets/img/icon.png" alt=""> -->
+                <span style="width:32px;height:32px;border-radius:50%;background:var(--main);display:inline-block"></span>
+                りゅーくん
+            </a>
+            <nav class="nav-links">
+                <a href="#works">WORKS</a>
+                <a href="#skills">SKILLS</a>
+                <a href="#about">ABOUT</a>
+                <a href="#contact">CONTACT</a>
+            </nav>
         </div>
-      </a>
+    </header>
 
-      <a class="card" href="#work-hamuham">
-        <div class="card-thumb">THUMBNAIL 16:9</div>
-        <div class="card-body">
-          <span class="card-tag">2.5D RACING</span>
-          <h3>はむはむカート</h3>
-          <p>2.5D表現のカートレース。<!-- ★一言説明を書く --></p>
+    <!-- ============ ヒーロー ============ -->
+    <div class="hero" id="top">
+        <div class="wrap hero-in">
+            <div class="hero-icon">
+                <!-- ★イラストが届いたら、下の<span>を消してこの行のコメントを外す：
+                     <img src="assets/img/icon.png" alt="りゅーくんのアイコン"> -->
+                <span class="placeholder">ICON</span>
+            </div>
+            <div class="hero-text">
+                <h1 class="hero-name">りゅーくん<span class="real">鈴木 龍汰</span></h1>
+                <div class="hero-role">GAME DEVELOPER / UNITY</div>
+                <p class="hero-lead">
+                    <!-- ★ここを自分の言葉で。「何を作る人か」が一文でわかるように -->
+                    Unityで2Dアクションを中心にゲームを作っています。
+                    遊んだ人が思わず声を出すような、仕掛けのある手触りを大事にしています。
+                </p>
+                <div class="hero-links">
+                    <a class="btn btn-fill" href="#works">作品を見る</a>
+                    <a class="btn btn-line" href="mailto:ryutasuzuki.game@gmail.com">メール</a>
+                    <a class="btn btn-line" href="https://x.com/Ryukun99_game" target="_blank" rel="noopener">X</a>
+                </div>
+            </div>
         </div>
-      </a>
+    </div>
 
-      <a class="card" href="#work-other">
-        <div class="card-thumb">THUMBNAIL 16:9</div>
-        <div class="card-body">
-          <span class="card-tag">OTHER</span>
-          <h3>その他の制作</h3>
-          <p>絶対返却宣言！／はむはむスイーツデリバリー ほか、これまでのプロトタイプ。</p>
+    <!-- ============ 作品一覧 ============ -->
+    <section id="works">
+        <div class="wrap">
+            <div class="sec-head">
+                <span class="en">WORKS</span>
+                <h2>作品</h2>
+            </div>
+
+            <div class="works">
+                <a class="card" href="#work-monochrome">
+                    <div class="card-thumb">
+                        <img src="assets/img/mono-01.png" alt="モノクロ・ボックス">
+                    </div>
+                    <div class="card-body">
+                        <span class="card-tag">2D PUZZLE ACTION</span>
+                        <h3>モノクロ・ボックス</h3>
+                        <p>白と黒の世界を切り替えて進む2Dパズルアクション。東京ゲームショウ出展作品。</p>
+                    </div>
+                </a>
+            </div>
         </div>
-      </a>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- ============ 作品詳細 ============ -->
-<section style="padding-top:0">
-  <div class="wrap">
+    <!-- ============ 作品詳細 ============ -->
+    <section style="padding-top:0">
+        <div class="wrap">
 
-    <!-- ---- モノクロ・ボックス ---- -->
-    <article class="work" id="work-monochrome">
-      <div class="work-head">
-        <h3>モノクロ・ボックス</h3>
-        <span class="en">2D PUZZLE ACTION / UNITY 6</span>
-      </div>
-      <p class="work-lead">白と黒、2つの世界を切り替えながらゴールを目指す2Dパズルアクション。<!-- ★あと1〜2行足す --></p>
+            <article class="work" id="work-monochrome">
+                <div class="work-head">
+                    <h3>モノクロ・ボックス</h3>
+                    <span class="en">2D PUZZLE ACTION / UNITY 6</span>
+                </div>
+                <p class="work-lead">
+                    白と黒、2つの世界を切り替えながらゴールを目指す2Dパズルアクション。
+                    <!-- ★あと1〜2行足すとより伝わります -->
+                </p>
 
-      <div class="video">
-        <!-- ★YouTubeに限定公開でアップしたら、共有→埋め込み のコードをここに貼る：
-        <iframe src="https://www.youtube.com/embed/【動画ID】" title="モノクロ・ボックス プレイ動画"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-                allowfullscreen></iframe>
-        -->
-        PLAY MOVIE<br>（ここにプレイ動画を埋め込み）
-      </div>
+                <div class="shot shot-main">
+                    <img src="assets/img/mono-01.png" alt="モノクロ・ボックスのプレイ画面">
+                </div>
 
-      <div class="shots">
-        <div class="shot">SCREENSHOT 1</div>
-        <div class="shot">SCREENSHOT 2</div>
-        <div class="shot">SCREENSHOT 3</div>
-      </div>
+                <table class="spec">
+                    <tr><th>ジャンル</th><td>2Dパズルアクション</td></tr>
+                    <tr><th>開発環境</th><td>Unity 6 / C#</td></tr>
+                    <tr><th>開発期間</th><td>2026年6月〜（約4ヶ月）</td></tr>
+                    <tr><th>チーム構成</th><td>3人（プログラム・企画：本人／ビジュアル：1名／企画協力：1名）</td></tr>
+                    <tr><th>担当範囲</th><td>企画（共同）／プログラム全般／レベルデザイン／サウンド実装／Git管理</td></tr>
+                    <tr><th>出展</th><td>東京ゲームショウ 2026 出展</td></tr>
+                </table>
 
-      <table class="spec">
-        <tr><th>ジャンル</th><td>2Dパズルアクション</td></tr>
-        <tr><th>開発環境</th><td>Unity 6 / C#</td></tr>
-        <tr><th>開発期間</th><td><!-- ★ -->◯ヶ月（20◯◯年◯月〜◯月）</td></tr>
-        <tr><th>チーム構成</th><td><!-- ★ -->◯人</td></tr>
-        <tr><th>担当範囲</th><td><!-- ★ここは具体的に。曖昧だと評価されません -->プログラム全般 / サウンド実装 / ステージ構成 / Gitのマージ管理</td></tr>
-        <tr><th>出展</th><td>東京ゲームショウ 2026 出展</td></tr>
-      </table>
+                <div class="points">
+                    <h4>担当したこと</h4>
+                    <ul>
+                        <li><b>コアメカニクスの考案</b>：白と黒の世界を切り替えて進むという中心の仕組みを、チームで話し合いながら形にしました。</li>
+                        <li><b>レベルデザイン</b>：ステージ構成と難易度の調整。序盤で仕組みを自然に理解できる並びを意識しました。</li>
+                        <li><b>チーム開発の進行管理</b>：ブランチ運用とマージを担当し、複数人が同時に触っても壊れない状態を保ちました。</li>
+                        <li><b>動作確認とバグ対応</b>：不具合の再現条件を切り分け、修正の優先順位を判断しました。</li>
+                        <li><b>サウンドの実装方針決め</b>：BGMとSEの鳴らし方、シーンをまたぐときの扱いを設計しました。</li>
+                    </ul>
+                </div>
+            </article>
 
-      <div class="points">
-        <h4>技術的に工夫した点</h4>
-        <ul>
-          <li><b>白黒の世界切り替え</b>：<!-- ★どう実装したか。プレイヤーの色変種スプライトと ColoredGround の当たり判定切り替えなど --></li>
-          <li><b>シーンをまたぐサウンド管理</b>：BGMとSEをSoundManagerに集約し、シーンごとの切り替えを一元化。<!-- ★シングルトンにした理由を一言 --></li>
-          <li><b>シーン構築の効率化</b>：Inspectorの参照設定を毎回やり直す手間を、ベーステンプレートシーンを用意することで削減。</li>
-        </ul>
+        </div>
+    </section>
 
-        <h4>つまずいた点と解決</h4>
-        <ul>
-          <li><b>シーン復帰時にBGMが無音になる</b>：フェード処理のコルーチンが次のシーン読み込みで中断され、音量が0のまま残ることが原因。<!-- ★どう直したか1行 --></li>
-          <li><b>トゲの死亡音が二重に鳴る</b>：<!-- ★原因と対処 --></li>
-        </ul>
-      </div>
+    <!-- ============ スキル ============ -->
+    <section id="skills">
+        <div class="wrap">
+            <div class="sec-head">
+                <span class="en">SKILLS</span>
+                <h2>できること</h2>
+            </div>
+            <div class="skills">
+                <div class="skill">
+                    <h4>ゲーム開発</h4>
+                    <ul>
+                        <li>Unity 6（2D / 2.5D）</li>
+                        <li>C# スクリプティング</li>
+                        <li>レベルデザイン・難易度調整</li>
+                        <li>ゲーム企画書の作成</li>
+                    </ul>
+                </div>
+                <div class="skill">
+                    <h4>プログラミング</h4>
+                    <ul>
+                        <li>C / C++</li>
+                        <li>Python（ツール自作・素材生成）</li>
+                    </ul>
+                </div>
+                <div class="skill">
+                    <h4>ツール・その他</h4>
+                    <ul>
+                        <li>Git / GitHub（チーム開発でのマージ管理）</li>
+                        <li>線形代数・物理の基礎（大学で履修）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      <div class="work-links">
-        <a class="btn btn-line" href="#" target="_blank" rel="noopener">GitHub</a>
-        <a class="btn btn-line" href="#" target="_blank" rel="noopener">ダウンロード / 試遊</a>
-      </div>
-    </article>
+    <!-- ============ ABOUT ============ -->
+    <section id="about">
+        <div class="wrap">
+            <div class="sec-head">
+                <span class="en">ABOUT</span>
+                <h2>自己紹介</h2>
+            </div>
+            <p style="max-width:40em; margin:0">
+                <!-- ★もう1〜2行、「なぜゲームを作るのか」が入ると強くなります -->
+                東京情報デザイン専門職大学でゲーム開発を学んでいます。個人制作とチーム制作の両方で主にUnityを使い習得中です！
+            </p>
+        </div>
+    </section>
 
-    <!-- ---- はむはむカート ---- -->
-    <article class="work" id="work-hamuham">
-      <div class="work-head">
-        <h3>はむはむカート</h3>
-        <span class="en">2.5D RACING / UNITY 6</span>
-      </div>
-      <p class="work-lead"><!-- ★2〜3行 -->2.5D表現のカートレースゲーム。</p>
+    <!-- ============ CONTACT ============ -->
+    <section id="contact">
+        <div class="wrap">
+            <div class="contact">
+                <h2>お問い合わせ</h2>
+                <p>制作のご相談・ご連絡、お気軽にどうぞ。</p>
+                <a class="btn btn-fill" href="mailto:ryutasuzuki.game@gmail.com">メールで連絡する</a>
+            </div>
+        </div>
+    </section>
 
-      <div class="video">PLAY MOVIE<br>（ここにプレイ動画を埋め込み）</div>
-
-      <div class="shots">
-        <div class="shot">SCREENSHOT 1</div>
-        <div class="shot">SCREENSHOT 2</div>
-        <div class="shot">SCREENSHOT 3</div>
-      </div>
-
-      <table class="spec">
-        <tr><th>ジャンル</th><td>2.5Dレース</td></tr>
-        <tr><th>開発環境</th><td>Unity 6 / C#</td></tr>
-        <tr><th>開発期間</th><td><!-- ★ -->◯ヶ月</td></tr>
-        <tr><th>チーム構成</th><td><!-- ★ -->◯人</td></tr>
-        <tr><th>担当範囲</th><td><!-- ★ --></td></tr>
-      </table>
-
-      <div class="points">
-        <h4>技術的に工夫した点</h4>
-        <ul>
-          <li><b><!-- ★見出し --></b>：<!-- ★内容 --></li>
-          <li><b><!-- ★見出し --></b>：<!-- ★内容 --></li>
-        </ul>
-      </div>
-
-      <div class="work-links">
-        <a class="btn btn-line" href="#" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </article>
-
-    <!-- ---- その他 ---- -->
-    <article class="work" id="work-other">
-      <div class="work-head">
-        <h3>その他の制作</h3>
-        <span class="en">PROTOTYPES</span>
-      </div>
-      <p class="work-lead">短期間で作ったプロトタイプや、授業・個人制作で試した仕組みです。</p>
-
-      <div class="points">
-        <ul>
-          <li><b>絶対返却宣言！</b>：疑似3Dのエンドレスランナー。絵文字グラフィックと強制スクロールで構成。</li>
-          <li><b>はむはむスイーツデリバリー</b>：<!-- ★一言 --></li>
-          <li><b>ベンチプレス・タイミングゲーム</b>：タイミング入力の手触りを検証したプロトタイプ。</li>
-          <li><b>オセロ（持ち時間付き）</b>：ルール実装とタイマー管理の練習。</li>
-        </ul>
-      </div>
-    </article>
-
-  </div>
-</section>
-
-<!-- ============ スキル ============ -->
-<section id="skills">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="en">SKILLS</span>
-      <h2>できること</h2>
-    </div>
-    <div class="skills">
-      <div class="skill">
-        <h4>ゲーム開発</h4>
-        <ul>
-          <li>Unity 6（2D / 2.5D）</li>
-          <li>C# スクリプティング</li>
-          <li>サウンド実装・シーン管理</li>
-          <li>ゲーム企画書の作成</li>
-        </ul>
-      </div>
-      <div class="skill">
-        <h4>プログラミング</h4>
-        <ul>
-          <li>C / C++</li>
-          <li>Python（ツール自作・素材生成）</li>
-          <li>HTML / CSS / JavaScript</li>
-        </ul>
-      </div>
-      <div class="skill">
-        <h4>ツール・その他</h4>
-        <ul>
-          <li>Git / GitHub（チーム開発でのマージ管理）</li>
-          <li>線形代数・物理の基礎（大学で履修）</li>
-          <li><!-- ★他にあれば --></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ ABOUT ============ -->
-<section id="about">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="en">ABOUT</span>
-      <h2>自己紹介</h2>
-    </div>
-    <p style="max-width:40em; margin:0">
-      <!-- ★ここを自分の言葉で3〜5行。
-           「なぜゲームを作るのか」「どういう作り方をする人か」が伝わると強いです -->
-      東京情報デザイン専門職大学でゲーム開発を学んでいます。
-      個人制作とチーム制作の両方でUnityを使い、2Dアクションからレースゲームまで幅広く作ってきました。
-    </p>
-  </div>
-</section>
-
-<!-- ============ CONTACT ============ -->
-<section id="contact">
-  <div class="wrap">
-    <div class="contact">
-      <h2>お問い合わせ</h2>
-      <p>制作のご相談・ご連絡、お気軽にどうぞ。</p>
-      <a class="btn btn-fill" href="mailto:【メールアドレス】">メールで連絡する</a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    © 2026 りゅーくん / 龍汰
-    <!-- ★イラストを人に描いてもらったらクレジットを入れる：
-    　　<br>Illustration: ◯◯ -->
-  </div>
-</footer>
+    <footer>
+        <div class="wrap">
+            © 2026 鈴木 龍汰
+            <!-- ★イラストを描いてもらったらクレジットを：
+                 <br>Illustration: ◯◯ -->
+        </div>
+    </footer>
 
 </body>
 </html>
