@@ -14,8 +14,8 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="assets/img/ogp.png">
     -->
-    <!-- ファビコン：assets/img/icon.png を置いたら下の1行のコメントを外す -->
-    <!-- <link rel="icon" href="assets/img/icon.png"> -->
+    <!-- ファビコン -->
+    <link rel="icon" href="assets/img/icon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,9 +132,12 @@
         }
 
             .nav-logo img {
-                width: 32px;
-                height: 32px;
-                border-radius: 50%
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                object-fit: cover;
+                background: var(--card);
+                border: 2px solid var(--main);
             }
 
         .nav-links {
@@ -221,16 +224,6 @@
                 width: 100%;
                 height: 100%;
                 object-fit: cover
-            }
-
-            .hero-icon .placeholder {
-                font-family: var(--font-en);
-                font-weight: 800;
-                font-size: .72rem;
-                color: var(--ink-sub);
-                text-align: center;
-                line-height: 1.5;
-                padding: 0 12px;
             }
 
         .hero-text {
@@ -609,8 +602,7 @@
     <header class="nav">
         <div class="wrap nav-in">
             <a class="nav-logo" href="#top">
-                     <img src="assets/img/icon.png" alt=""> -->
-                <span style="width:32px;height:32px;border-radius:50%;background:var(--main);display:inline-block"></span>
+                <img src="assets/img/icon.png" alt="">
                 りゅーくん
             </a>
             <nav class="nav-links">
@@ -626,14 +618,12 @@
     <div class="hero" id="top">
         <div class="wrap hero-in">
             <div class="hero-icon">
-                     <img src="assets/img/icon.png" alt="りゅーくんのアイコン"> -->
-                <span class="placeholder">ICON
+                <img src="assets/img/icon.png" alt="りゅーくんのアイコン">
             </div>
             <div class="hero-text">
                 <h1 class="hero-name">りゅーくん</h1>
                 <div class="hero-role">GAME DEVELOPER / UNITY</div>
                 <p class="hero-lead">
-                    <!-- ★ここを自分の言葉で。「何を作る人か」が一文でわかるように -->
                     Unityで2Dアクションを中心にゲームを作っています。
                     遊んだ人が思わず声を出すような、仕掛けのある手触りを大事にしています。
                 </p>
@@ -769,7 +759,6 @@
             </div>
         </div>
     </section>
-
 
 </body>
 </html>
